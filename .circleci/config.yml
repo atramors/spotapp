@@ -15,14 +15,14 @@ commands:
             # Replace system python and pip to custom ones
             # echo export PATH=/home/circleci/venv/bin:$PATH'
       - run:
-          name: Print lib versions
-          command: pip freeze
-      - run:
           name: Install actual requirements
           command: |
             sudo apt update
             python -m pip install --upgrade pip
             pip install -r requirements.txt
+      - run:
+          name: Print lib versions
+          command: pip freeze
 
   syntax_check:
     description: "Syntax checking"

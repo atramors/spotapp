@@ -10,7 +10,7 @@ from api.constants import DEFAULT_LOG_FORMAT
 class Settings(BaseSettings):
     """Settings which can be provided when server starts"""
     # db_dsn in format: 'postgresql+asyncpg://USERNAME:PASSWORD@$HOST/DB_NAME'
-    db_dsn: PostgresDsn = os.environ.get("DB_DSN")
+    db_dsn: PostgresDsn  # = os.environ.get("DB_DSN")
     log_format: Optional[str] = DEFAULT_LOG_FORMAT
     log_level: Optional[str] = "INFO"
     db_query_timeout: Optional[int] = 30
