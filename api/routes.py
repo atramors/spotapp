@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.constants import API_TITLE
 from api.crud import CRUDSpotApp
 from api.db import get_session
-from api.schema import UserModel, SpotModel, CommentModel, Error
+from api.schema import UserModel, Error
 
 
 spotapp_router = APIRouter(tags=[API_TITLE])

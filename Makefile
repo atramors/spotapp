@@ -2,6 +2,13 @@
 run:
 	uvicorn spotapp:app --reload --port 8000
 
+# check syntax
+lintapi:
+	flake8 api
+
+lint:
+	flake8 tests
+
 # run tests
-tests:
-	cd tests $$ pytest
+test:
+	pytest tests --cov-config=tests/.coveragerc
