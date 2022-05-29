@@ -11,6 +11,7 @@ commands:
       - run:
           name: Create virtualenv
           command: |
+            cd project
             python -m venv /home/circleci/venv
             # Replace system python and pip to custom ones
             # echo export PATH=/home/circleci/venv/bin:$PATH'
@@ -18,6 +19,7 @@ commands:
           name: Install actual requirements
           command: |
             sudo apt update
+            . venv/bin/activate
             python -m pip install --upgrade pip
             pip install -r requirements.txt
       - run:
@@ -39,6 +41,8 @@ commands:
       - run:
           name: Unit tests
           command: |
+            # mock for tests
+            export DB_DSN='postgresql+asyncpg://USERNAME:PASSWORD@$HOST/DB_NAME'
             export PYTHONPATH=$PYTHONPATH:/home/circleci/project
             if [ -d tests ]; then pytest tests --cov-config=tests/.coveragerc;fi
 
