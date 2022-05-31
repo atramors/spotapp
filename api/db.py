@@ -8,8 +8,7 @@ from api.settings import settings
 async_engine = create_async_engine(
     settings.db_dsn,
     pool_pre_ping=True,
-    connect_args={"check_same_thread": False,
-                  "timeout": settings.db_query_timeout}
+    connect_args={"timeout": settings.db_query_timeout}
 )
 
 SessionFactory = sessionmaker(autocommit=False,
