@@ -1,4 +1,6 @@
 import asyncio
+from datetime import datetime
+
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Float, Text
 from sqlalchemy.orm import relationship, declarative_base
 
@@ -11,20 +13,21 @@ class UserDBModel(Base):
     __tablename__ = "users"
 
     user_id = Column(Integer, primary_key=True, index=True)
-    nickname = Column(String(30), unique=True, index=True)
-    first_name = Column(String(30), unique=True, index=True)
-    last_name = Column(String(30), unique=True, index=True)
-    user_pic = Column(String)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    friends = Column(String)
-    spot_photos = Column(String)
-    added_spots = Column(String)
-    favourite_spots = Column(String)
+    nickname = Column(String(30), unique=True, nullable=False, index=True)
+    first_name = Column(String(30), unique=False, nullable=False, )
+    last_name = Column(String(30), unique=False, nullable=False, )
+    user_pic = Column(String, nullable=True, )
+    email = Column(String, unique=True, nullable=False, )
+    hashed_password = Column(String, nullable=False)
+    friends = Column(String, nullable=True, )
+    spot_photos = Column(String, nullable=True, )
+    added_spots = Column(String, nullable=True, )
+    favourite_spots = Column(String, nullable=True, )
     premium_account_type = Column(Boolean, default=False)
 
-    spots = relationship("Spot", back_populates="owner")
-    comments = relationship("Comment", back_populates="owner")
+    # spots = relationship("Spots", back_populates="users")
+    # comments = relationship("Comment", back_populates="users")
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
 class SpotDBModel(Base):
@@ -50,8 +53,9 @@ class SpotDBModel(Base):
 
     owner_id = Column(Integer, ForeignKey("users.user_id"))
 
-    owner = relationship("Users", back_populates="spots")
-    comments = relationship("Comment", back_populates="spot_comment")
+    # owner = relationship("Users", back_populates="spots")
+    # comments = relationship("Comment", back_populates="comments")
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
 class CommentDBModel(Base):
@@ -60,11 +64,11 @@ class CommentDBModel(Base):
 
     comment_id = Column(Integer, primary_key=True, index=True)
     body = Column(Text)
-    created_at = Column(DateTime)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     owner_id = Column(Integer, ForeignKey("users.user_id"))
 
-    owner = relationship("User", back_populates="spots")
-    spots = relationship("Spot", back_populates="spot_comment")
+    # owner = relationship("User", back_populates="spots")
+    # spots = relationship("Spot", back_populates="comments")
 
 
 async def async_create_tables():

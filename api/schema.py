@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Union
 from pydantic import BaseModel, Field
 
 
@@ -13,17 +13,13 @@ class Error(BaseModel):
                       )
 
 
-class UserModel(BaseModel):
+class UserSchema(BaseModel):
     nickname: str
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    user_pic: Optional[str] = None
+    first_name: Union[str, None]
+    last_name: Union[str, None]
+    user_pic: Union[str, None]
     email: str = Field(repr=False)
     hashed_password: str = Field(repr=False)
-    friends: Optional[List[str]] = None
-    spot_photos: Optional[str] = None
-    added_spots: Optional[List[str]] = None
-    favourite_spots: Optional[List[str]] = None
     premium_account_type: bool = False
 
     class Config:
@@ -33,28 +29,24 @@ class UserModel(BaseModel):
                 "first_name": "John",
                 "last_name": "Doe",
                 "user_pic": "link with an image",
-                "friends": ["user1", "user2", ],
-                "spot_photos": ["spot1_img", "spot2_img", ],
-                "added_spots": ["spot_name1", "spot_name2", ],
-                "favourite_spots": ["spot_name1", ],
                 "premium_account_type": False
             }
         }
 
 
-class SpotModel(BaseModel):
-    spot_name: Optional[str] = None
-    spot_pic: Optional[str] = None
-    spot_photos: Optional[List[str]] = None
-    spot_country: Optional[str] = None
-    spot_city: Optional[str] = None
-    spot_street: Optional[str] = None
-    spot_street_number: Optional[str] = None
-    spot_full_address: Optional[str] = None
-    spot_description: Optional[str] = None
-    spot_raiting: Optional[float] = None
-    user_added_spot: Optional[str] = None
-    comments: Optional[List[str]] = None
+class SpotSchema(BaseModel):
+    spot_name: Union[str, None]
+    spot_pic: Union[str, None]
+    spot_photos: Union[List[str], None]
+    spot_country: Union[str, None]
+    spot_city: Union[str, None]
+    spot_street: Union[str, None]
+    spot_street_number: Union[str, None]
+    spot_full_address: Union[str, None]
+    spot_description: Union[str, None]
+    spot_raiting: Union[float, None]
+    user_added_spot: Union[str, None]
+    comments: Union[List[str], None]
 
     class Config:
         sample_schema = {
@@ -72,6 +64,5 @@ class SpotModel(BaseModel):
         }
 
 
-class CommentModel(BaseModel):
-    body: Optional[str] = None
-    created_at: datetime
+class CommentSchema(BaseModel):
+    body: Union[str, None]
