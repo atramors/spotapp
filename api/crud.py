@@ -1,25 +1,24 @@
 from typing import Dict
-from sqlalchemy import select, text
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.models import UserDBModel
-from api.schema import UserSchema
+from api import schema
 
 
 class CRUDSpotApp:
     model = UserDBModel
 
-    async def get_user_by_user_id(self,
-                                  db: AsyncSession,
-                                  id: int,
-                                  ) -> Dict:
-        query = select(self.model).filter(self.model.user_id == id)
+    @classmethod
+    async def get_user_by_id(cls, db: AsyncSession,
+                             user_id: int) -> Dict:
+        query = select(cls.model).filter(cls.model.user_id == user_id)
         result = await db.execute(query)
 
         return result.mappings().one()
 
-    async def post_user(self,
-                        db: AsyncSession,
-                        user: UserSchema
-                        ) -> Dict:
-        return db.add(user)
+    @classmethod
+    async def post_user(cls, db: AsyncSession,
+                        user: schema.NewUserSchema) -> schema.UserCreatedSchema:
+        db.add(user)
+        return schema.UserCreatedSchema(nickname=user.nickname, email=user.email)

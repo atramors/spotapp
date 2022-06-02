@@ -13,25 +13,25 @@ class Error(BaseModel):
                       )
 
 
-class UserSchema(BaseModel):
+class NewUserSchema(BaseModel):
     nickname: str
-    first_name: Union[str, None]
-    last_name: Union[str, None]
+    first_name: str
+    last_name: str
     user_pic: Union[str, None]
-    email: str = Field(repr=False)
-    hashed_password: str = Field(repr=False)
+    email: str
+    hashed_password: str
     premium_account_type: bool = False
 
     class Config:
-        sample_schema = {
-            "example": {
-                "nickname": "Some cool user",
-                "first_name": "John",
-                "last_name": "Doe",
-                "user_pic": "link with an image",
-                "premium_account_type": False
-            }
-        }
+        orm_mode = True
+
+
+class UserCreatedSchema(BaseModel):
+    nickname: str
+    email: str
+
+    class Config:
+        orm_mode = True
 
 
 class SpotSchema(BaseModel):
