@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 @spotapp_router.get(
     path="/user/{user_id}",
-    # response_model=NewUserSchema,
+    response_model=schema.ShowUserSchema,
     responses={
         200: {"description": "requested user by user_id"},
         404: {"model": schema.Error, "description": "requested user was not found"},
@@ -28,6 +29,21 @@ async def get_user(user_id: int,
                    ):
     result = await CRUDSpotApp.get_user_by_id(db=db,
                                               user_id=user_id)
+    return result
+
+
+@spotapp_router.get(
+    path="/users",
+    response_model=List[schema.ShowUserSchema],
+    responses={
+        200: {"description": "all users"},
+        404: {"model": schema.Error, "description": "requested user was not found"},
+        406: {"model": schema.Error, "description": "input data format error"},
+    },
+)
+async def get_all_user(db: AsyncSession = Depends(get_session),
+                   ) -> List[schema.ShowUserSchema]:
+    result = await CRUDSpotApp.get_all_users(db=db)
     return result
 
 

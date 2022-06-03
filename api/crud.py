@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import List
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,11 +11,20 @@ class CRUDSpotApp:
 
     @classmethod
     async def get_user_by_id(cls, db: AsyncSession,
-                             user_id: int) -> Dict:
+                             user_id: int) -> schema.ShowUserSchema:
         query = select(cls.model).filter(cls.model.user_id == user_id)
         result = await db.execute(query)
 
-        return result.mappings().one()
+        return result.mappings().one()[cls.model]
+
+    # TODO: fix the logic
+    @classmethod
+    async def get_all_users(
+            cls, db: AsyncSession) -> List[schema.ShowUserSchema]:
+        query = select(cls.model).filter()
+        result = await db.execute(query)
+
+        return result.mappings().all()[cls.model]
 
     @classmethod
     async def post_user(cls, db: AsyncSession,
