@@ -34,6 +34,20 @@ class UserCreatedSchema(BaseModel):
         orm_mode = True
 
 
+class ShowUserSchema(BaseModel):
+    nickname: str
+    first_name: str
+    last_name: str
+    user_pic: Union[str, None]
+    friends: Union[str, None]
+    spot_photos: Union[str, None]
+    added_spots: Union[str, None]
+    favourite_spots: Union[str, None]
+
+    class Config:
+        orm_mode = True
+
+
 class SpotSchema(BaseModel):
     spot_name: Union[str, None]
     spot_pic: Union[str, None]
