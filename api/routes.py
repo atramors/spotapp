@@ -1,8 +1,11 @@
 import logging
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import NoResultFound
+from starlette import status
 
 from api.constants import API_TITLE
 from api.crud import CRUDUser
@@ -28,8 +31,19 @@ async def get_user(user_id: int,
                    db: AsyncSession = Depends(get_session),
                    ) -> schema.ShowUserSchema:
     """Getting user by the user id"""
+    try:
 
-    return await CRUDUser.get_user_by_id(db=db, user_id=user_id)
+        return await CRUDUser.get_user_by_id(db=db, user_id=user_id)
+
+    except ValidationError as exc:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Specified {user_id=} was not found",
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
 
 
 @spotapp_router.get(
@@ -50,7 +64,10 @@ async def get_all_user(db: AsyncSession = Depends(get_session),
 
 @spotapp_router.post(
     path="/signup",
-    response_model=schema.UserCreatedSchema
+    response_model=schema.UserCreatedSchema,
+    responses={
+        201: {"description": "user have been created"},
+    },
 )
 async def create_user(request: schema.NewUserSchema,
                       db: AsyncSession = Depends(get_session),
@@ -65,9 +82,8 @@ async def create_user(request: schema.NewUserSchema,
 
 @spotapp_router.delete(
     path="/destroy_user/{user_id}",
-    # response_model=schema.ShowUserSchema,
     responses={
-        200: {"description": "requested user by user_id"},
+        204: {"description": "user have been deleted"},
         404: {"model": schema.Error, "description": "requested user was not found"},
         406: {"model": schema.Error, "description": "input data format error"},
     },
@@ -77,4 +93,15 @@ async def destroy_user(user_id: int,
                        ) -> str:
     """Getting user by the user id"""
 
-    return await CRUDUser.delete_user(db=db, user_id=user_id)
+    try:
+        return await CRUDUser.delete_user(db=db, user_id=user_id)
+
+    except ValidationError as exc:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Specified {user_id=} was not found",
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
