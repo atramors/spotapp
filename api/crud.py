@@ -16,13 +16,8 @@ class CRUDUser:
 
         query = select(cls.model).filter(cls.model.user_id == user_id)
         result = await db.execute(query)
-        user = result.scalar_one_or_none()
 
-        if not user:
-            # TODO: fix esceptions
-            raise Exception
-
-        return user
+        return result.scalar_one()
 
     @classmethod
     async def get_all_users(cls,
@@ -52,11 +47,7 @@ class CRUDUser:
 
         query = select(cls.model).filter(cls.model.user_id == user_id)
         result = await db.execute(query)
-        user = result.scalar_one_or_none()
-
-        if not user:
-            # TODO: fix esceptions
-            raise Exception
+        user = result.scalar_one()
 
         await db.delete(user)
         await db.commit()
