@@ -31,11 +31,10 @@ class CRUDUser:
 
     @classmethod
     async def add_user(cls, db: AsyncSession,
-                       user: schema.NewUserSchema) -> schema.UserCreatedSchema:
+                       user) -> schema.UserCreatedSchema:
         """Add new user to data base"""
 
-        await db.add(user)
-        await db.commit()
+        db.add(user)
 
         return schema.UserCreatedSchema(nickname=user.nickname,
                                         email=user.email)
