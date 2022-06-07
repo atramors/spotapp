@@ -19,19 +19,21 @@ logger = logging.getLogger(__name__)
 
 
 @spotapp_router.get(
-    path="/user/{user_id}",
+    path="/users/{user_id}",
     response_model=schema.ShowUserSchema,
     responses={
-        200: {"description": "requested user by user_id"},
-        404: {"model": schema.Error, "description": "requested user was not found"},
-        406: {"model": schema.Error, "description": "input data format error"},
+        200: {"description": "User requested by user_id"},
+        404: {"model": schema.Error, "description": "Requested user was not found"},
+        406: {"model": schema.Error, "description": "Input data format error"},
     },
 )
 async def get_user(user_id: int,
                    db: AsyncSession = Depends(get_session),
                    ) -> schema.ShowUserSchema:
     """Getting user by the user id"""
+
     try:
+        schema.InputDataValidator(user_id=user_id)
 
         return await CRUDUser.get_user_by_id(db=db, user_id=user_id)
 
@@ -43,27 +45,26 @@ async def get_user(user_id: int,
             detail=f"Specified {user_id=} was not found",
         )
     except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
 
 
 @spotapp_router.get(
-    path="/users",
+    path="/users/",
     response_model=List[schema.ShowUserSchema],
     responses={
         200: {"description": "getting all users"},
-        404: {"model": schema.Error, "description": "there are no users found"},
-        406: {"model": schema.Error, "description": "input data format error"},
     },
 )
-async def get_all_user(db: AsyncSession = Depends(get_session),
-                       ) -> List[schema.ShowUserSchema]:
+async def get_all_users(db: AsyncSession = Depends(get_session),
+                        ) -> List[schema.ShowUserSchema]:
     """Getting all users"""
 
     return await CRUDUser.get_all_users(db=db)
 
 
 @spotapp_router.post(
-    path="/signup",
+    path="/users/create_user/",
     response_model=schema.UserCreatedSchema,
     responses={
         201: {"description": "user have been created"},
@@ -81,11 +82,11 @@ async def create_user(request: schema.NewUserSchema,
 
 
 @spotapp_router.delete(
-    path="/destroy_user/{user_id}",
+    path="/users/destroy_user/{user_id}",
     responses={
-        204: {"description": "user have been deleted"},
-        404: {"model": schema.Error, "description": "requested user was not found"},
-        406: {"model": schema.Error, "description": "input data format error"},
+        204: {"description": "User have been deleted"},
+        404: {"model": schema.Error, "description": "Requested user was not found"},
+        406: {"model": schema.Error, "description": "Input data format error"},
     },
 )
 async def destroy_user(user_id: int,
@@ -94,6 +95,8 @@ async def destroy_user(user_id: int,
     """Getting user by the user id"""
 
     try:
+        schema.InputDataValidator(user_id=user_id)
+
         return await CRUDUser.delete_user(db=db, user_id=user_id)
 
     except ValidationError as exc:
@@ -104,4 +107,5 @@ async def destroy_user(user_id: int,
             detail=f"Specified {user_id=} was not found",
         )
     except Exception as exc:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
