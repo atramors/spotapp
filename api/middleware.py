@@ -8,5 +8,5 @@ async def http_exception_handler(request: Request, exception: HTTPException):
         content={
             "message": str(exception.detail),
             "code": exception.status_code,
-        }
+        },
     )
