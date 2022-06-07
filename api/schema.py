@@ -1,5 +1,4 @@
-from datetime import datetime
-from typing import List, Union
+from typing import List, Optional, Union
 from pydantic import BaseModel, Field
 
 
@@ -11,6 +10,10 @@ class Error(BaseModel):
                                 "<Validation error description>",
                                 "<Internal server error description>"],
                       )
+
+
+class InputDataValidator(BaseModel):
+    user_id: Optional[int] = Field(gt=0, le=2147483647)  # check int32 range
 
 
 class NewUserSchema(BaseModel):
