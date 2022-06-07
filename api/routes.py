@@ -59,26 +59,32 @@ async def get_user(user_id: int,
 async def get_all_users(db: AsyncSession = Depends(get_session),
                         ) -> List[schema.ShowUserSchema]:
     """Getting all users"""
+    try:
+        return await CRUDUser.get_all_users(db=db)
 
-    return await CRUDUser.get_all_users(db=db)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
 
 
 @spotapp_router.post(
     path="/users/create_user/",
     response_model=schema.UserCreatedSchema,
-    responses={
-        201: {"description": "user have been created"},
-    },
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_user(request: schema.NewUserSchema,
                       db: AsyncSession = Depends(get_session),
                       ) -> schema.UserCreatedSchema:
     """Creating a new user"""
 
-    new_user = UserDBModel(**request.dict())
-    created_user = await CRUDUser.add_user(db=db, user=new_user)
+    try:
+        new_user = UserDBModel(**request.dict())
 
-    return created_user
+        return await CRUDUser.add_user(db=db, user=new_user)
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
 
 
 @spotapp_router.delete(
