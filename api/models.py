@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Float, Text
+from sqlalchemy import ARRAY, Boolean, Column, DateTime, ForeignKey, Integer, String, Float, Text
 from sqlalchemy.orm import relationship, declarative_base
 
 
@@ -19,10 +19,10 @@ class UserDBModel(Base):
     user_pic = Column(String, nullable=True, )
     email = Column(String, unique=True, nullable=False, )
     hashed_password = Column(String, nullable=False)
-    friends = Column(String, nullable=True, )
-    spot_photos = Column(String, nullable=True, )
-    added_spots = Column(String, nullable=True, )
-    favourite_spots = Column(String, nullable=True, )
+    friends = Column(ARRAY(String), nullable=True, )
+    spot_photos = Column(ARRAY(String), nullable=True, )
+    added_spots = Column(ARRAY(String), nullable=True, )
+    favourite_spots = Column(ARRAY(String), nullable=True, )
     premium_account_type = Column(Boolean, default=False)
 
     # spots = relationship("Spots", back_populates="users")
