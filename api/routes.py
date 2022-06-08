@@ -18,9 +18,29 @@ spotapp_router = APIRouter(tags=[API_TITLE])
 logger = logging.getLogger(__name__)
 
 
+@spotapp_router.post(
+    path="/users/create_user/",
+    response_model=schema.UserTerseSchema,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_user(request: schema.UserCreationSchema,
+                      db: AsyncSession = Depends(get_session),
+                      ) -> schema.UserTerseSchema:
+    """Creating a new user"""
+
+    try:
+        new_user = UserDBModel(**request.dict())
+
+        return await CRUDUser.add_user(db=db, user=new_user)
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+
+
 @spotapp_router.get(
     path="/users/{user_id}",
-    response_model=schema.ShowUserSchema,
+    response_model=schema.UserOpenSchema,
     responses={
         200: {"description": "User requested by user_id"},
         404: {"model": schema.Error, "description": "Requested user was not found"},
@@ -29,7 +49,7 @@ logger = logging.getLogger(__name__)
 )
 async def get_user(user_id: int,
                    db: AsyncSession = Depends(get_session),
-                   ) -> schema.ShowUserSchema:
+                   ) -> schema.UserOpenSchema:
     """Getting user by the user id"""
 
     try:
@@ -51,13 +71,13 @@ async def get_user(user_id: int,
 
 @spotapp_router.get(
     path="/users/",
-    response_model=List[schema.ShowUserSchema],
+    response_model=List[schema.UserOpenSchema],
     responses={
         200: {"description": "getting all users"},
     },
 )
 async def get_all_users(db: AsyncSession = Depends(get_session),
-                        ) -> List[schema.ShowUserSchema]:
+                        ) -> List[schema.UserOpenSchema]:
     """Getting all users"""
     try:
         return await CRUDUser.get_all_users(db=db)
@@ -67,21 +87,30 @@ async def get_all_users(db: AsyncSession = Depends(get_session),
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
 
 
-@spotapp_router.post(
-    path="/users/create_user/",
-    response_model=schema.UserCreatedSchema,
-    status_code=status.HTTP_201_CREATED,
+@spotapp_router.put(
+    path="/users/{user_id}",
+    response_model=schema.UserTerseSchema,
+    status_code=status.HTTP_202_ACCEPTED,
 )
-async def create_user(request: schema.NewUserSchema,
+async def update_user(user_id: int,
+                      request: schema.UserFullSchema,
                       db: AsyncSession = Depends(get_session),
-                      ) -> schema.UserCreatedSchema:
-    """Creating a new user"""
+                      ) -> schema.UserTerseSchema:
+    """Updating user by the user id"""
 
     try:
-        new_user = UserDBModel(**request.dict())
+        schema.InputDataValidator(user_id=user_id)
+        user = request.dict()
+        # import pdb; pdb.set_trace()
+        return await CRUDUser.update(db=db, user_id=user_id, user=user)
 
-        return await CRUDUser.add_user(db=db, user=new_user)
-
+    except ValidationError as exc:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Specified {user_id=} was not found",
+        )
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)

@@ -16,7 +16,7 @@ class InputDataValidator(BaseModel):
     user_id: Optional[int] = Field(gt=0, le=2147483647)  # check int32 range
 
 
-class NewUserSchema(BaseModel):
+class UserCreationSchema(BaseModel):
     nickname: str
     first_name: str
     last_name: str
@@ -29,7 +29,7 @@ class NewUserSchema(BaseModel):
         orm_mode = True
 
 
-class UserCreatedSchema(BaseModel):
+class UserTerseSchema(BaseModel):
     nickname: str
     email: str
 
@@ -37,7 +37,7 @@ class UserCreatedSchema(BaseModel):
         orm_mode = True
 
 
-class ShowUserSchema(BaseModel):
+class UserOpenSchema(BaseModel):
     nickname: str
     first_name: str
     last_name: str
@@ -46,6 +46,23 @@ class ShowUserSchema(BaseModel):
     spot_photos: Union[str, None]
     added_spots: Union[str, None]
     favourite_spots: Union[str, None]
+
+    class Config:
+        orm_mode = True
+
+
+class UserFullSchema(BaseModel):
+    nickname: Union[str, None] = None
+    first_name: Union[str, None] = None
+    last_name: Union[str, None] = None
+    user_pic: Union[str, None] = None
+    email: Union[str, None] = None
+    hashed_password: Union[str, None] = None
+    premium_account_type: bool = False
+    friends: Union[List[str], None] = None
+    spot_photos: Union[List[str], None] = None
+    added_spots: Union[List[str], None] = None
+    favourite_spots: Union[List[str], None] = None
 
     class Config:
         orm_mode = True
