@@ -42,27 +42,23 @@ class UserOpenSchema(BaseModel):
     first_name: str
     last_name: str
     user_pic: Union[str, None]
-    friends: Union[str, None]
-    spot_photos: Union[str, None]
-    added_spots: Union[str, None]
-    favourite_spots: Union[str, None]
+    friends: Union[List[str], None] = []
+    spot_photos: Union[List[str], None] = []
+    added_spots: Union[List[str], None] = []
+    favourite_spots: Union[List[str], None] = []
 
     class Config:
         orm_mode = True
 
 
-class UserFullSchema(BaseModel):
+class UserSchema(BaseModel):
     nickname: Union[str, None] = None
     first_name: Union[str, None] = None
     last_name: Union[str, None] = None
     user_pic: Union[str, None] = None
     email: Union[str, None] = None
     hashed_password: Union[str, None] = None
-    premium_account_type: bool = False
-    friends: Union[List[str], None] = None
-    spot_photos: Union[List[str], None] = None
-    added_spots: Union[List[str], None] = None
-    favourite_spots: Union[List[str], None] = None
+    premium_account_type: Union[bool, None] = None
 
     class Config:
         orm_mode = True
