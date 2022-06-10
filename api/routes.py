@@ -12,6 +12,7 @@ from api.crud import CRUDUser
 from api.db import get_session
 from api import schema
 from api.models import UserDBModel
+from api.utils import PasswordHasher
 
 
 spotapp_user_router = APIRouter(prefix="/users", tags=["SpotApp_User"])
@@ -78,6 +79,8 @@ async def create_user(payload: schema.UserCreationSchema,
     """Creating a new user"""
 
     try:
+        hashed_password = PasswordHasher().hash_password(payload.password)
+        payload.password = hashed_password
         new_user = UserDBModel(**payload.dict())
 
         return await CRUDUser.add_user(db=db, user=new_user)

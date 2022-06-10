@@ -18,7 +18,7 @@ class UserDBModel(Base):
     last_name = Column(String(30), unique=False, nullable=False, )
     user_pic = Column(String, nullable=True, )
     email = Column(String, unique=True, nullable=False, )
-    hashed_password = Column(String, nullable=False)
+    password = Column(String, nullable=False)
     friends = Column(ARRAY(String), nullable=True, )
     spot_photos = Column(ARRAY(String), nullable=True, )
     added_spots = Column(ARRAY(String), nullable=True, )
