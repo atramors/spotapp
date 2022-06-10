@@ -22,7 +22,7 @@ class UserCreationSchema(BaseModel):
     last_name: str
     user_pic: Union[str, None]
     email: str
-    hashed_password: str
+    password: str
     premium_account_type: bool = False
 
     class Config:
@@ -57,7 +57,7 @@ class UserSchema(BaseModel):
     last_name: Union[str, None] = None
     user_pic: Union[str, None] = None
     email: Union[str, None] = None
-    hashed_password: Union[str, None] = None
+    password: Union[str, None] = None
     premium_account_type: Union[bool, None] = None
 
     class Config:
