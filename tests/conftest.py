@@ -24,3 +24,6 @@ async def async_client():
 
     async with AsyncClient(app=spotapp.app, base_url="http://test") as client_fixture:
         yield client_fixture
+
+    async with async_engine.begin() as connection:
+        await connection.run_sync(Base.metadata.drop_all)
