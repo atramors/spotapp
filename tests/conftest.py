@@ -9,7 +9,7 @@ from api.db import async_engine
 
 @pytest.fixture
 def client():
-    """Clien fixture"""
+    """Client fixture"""
 
     with TestClient(spotapp.app) as client_fixture:
         yield client_fixture
