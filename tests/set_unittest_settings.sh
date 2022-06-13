@@ -1,0 +1,1 @@
+export db_dsn="postgresql+asyncpg://user:pass@localhost_unittest:5432/mockup"

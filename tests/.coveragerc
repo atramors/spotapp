@@ -1,7 +1,11 @@
 [run]
 omit =
         */__init__.py
+        */constants.py
+        */tests/*
 
 [report]
 omit =
         */__init__.py
+        */constants.py
+        */tests/*
