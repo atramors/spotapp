@@ -8,12 +8,12 @@ commands:
   install_requirements:
     description: "Installing requirements"
     steps:
-      - run:
-          name: Create virtualenv
-          command: |
-            python -m venv /home/circleci/venv
-            # Replace system python and pip to custom ones
-            # echo export PATH=/home/circleci/venv/bin:$PATH'
+      # - run:
+      #     name: Create virtualenv
+      #     command: |
+      #       python -m venv /home/circleci/venv
+      #       # Replace system python and pip to custom ones
+      #       # echo export PATH=/home/circleci/venv/bin:$PATH'
       - run:
           name: Install actual requirements
           command: |
@@ -40,7 +40,7 @@ commands:
           name: Unit tests
           command: |
             # mock for tests
-            export DB_DSN='postgresql+asyncpg://USERNAME:PASSWORD@localhost/DB_NAME'
+            export db_dsn='postgresql+asyncpg://USERNAME:PASSWORD@localhost:5432/DB_NAME'
             export PYTHONPATH=$PYTHONPATH:/home/circleci/project
             if [ -d tests ]; then pytest tests --cov-config=tests/.coveragerc;fi
 
