@@ -4,6 +4,11 @@ from api.crud import CRUDUser
 from tests import stubs, sample
 
 
+def test_health_check(client):
+    response = client.get("/health")
+    assert response.status_code == HTTPStatus.OK
+
+
 def test_user_get_by_id_ok(client, mocker):
     mocker.patch.object(CRUDUser, "get_user_by_id", side_effect=stubs.get_user_by_id_stub, autospec=True)
     response = client.get("/users/1")

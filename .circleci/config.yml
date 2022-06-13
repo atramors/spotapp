@@ -39,10 +39,11 @@ commands:
       - run:
           name: Unit tests
           command: |
-            # mock for tests
-            export db_dsn='postgresql+asyncpg://user:pass@localhost_unittest:5432/testdb'
             export PYTHONPATH=$PYTHONPATH:/home/circleci/project
-            if [ -d tests ]; then pytest tests --cov-config=tests/.coveragerc;fi
+            # settings for tests
+            source ./tests/set_unittest_settings.sh
+            make test
+            # if [ -d tests ]; then pytest tests --cov-config=tests/.coveragerc;fi
 
 jobs:
   testing:
