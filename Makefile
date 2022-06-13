@@ -11,4 +11,7 @@ lint:
 
 # run tests
 test:
-	pytest tests --cov-config=tests/.coveragerc
+	pytest --cov-report term \
+	--cov=. \
+	--cov-config=tests/.coveragerc \
+	tests/

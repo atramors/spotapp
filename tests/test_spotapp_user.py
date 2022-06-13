@@ -14,3 +14,10 @@ def test_user_get_by_id_ok(client, mocker):
     response = client.get("/users/1")
     assert response.status_code == HTTPStatus.OK
     assert response.json() == sample.EXAMPLE_USER_GET
+
+
+def test_user_get_by_id_422(client, mocker):
+    mocker.patch.object(CRUDUser, "get_user_by_id", side_effect=stubs.get_user_by_id_stub, autospec=True)
+    response = client.get("/users/wrong_data_type")
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert response.json() == sample.EXAMPLE_USER_422

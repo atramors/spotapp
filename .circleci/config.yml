@@ -43,7 +43,6 @@ commands:
             # settings for tests
             source ./tests/set_unittest_settings.sh
             make test
-            # if [ -d tests ]; then pytest tests --cov-config=tests/.coveragerc;fi
 
 jobs:
   testing:

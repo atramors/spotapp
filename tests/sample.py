@@ -8,3 +8,13 @@ EXAMPLE_USER_GET = {
     "added_spots": ["some_test_spot", ],
     "favourite_spots": ["some_test_spot", ]
 }
+
+EXAMPLE_USER_422 = {
+    'detail': [
+        {
+            'loc': ['path', 'user_id'],
+            'msg': 'value is not a valid integer',
+            'type': 'type_error.integer'
+        }
+    ]
+}
