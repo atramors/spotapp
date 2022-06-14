@@ -1,3 +1,13 @@
+RAW_USER = {
+    "nickname": "test_user",
+    "first_name": "fake_name",
+    "last_name": "fake_name2",
+    "user_pic": "fake_pic",
+    "email": "somefake@gmail.com",
+    "password": "strong_password",
+    "premium_account_type": False,
+}
+
 EXAMPLE_USER_GET = {
     "nickname": "test_user",
     "first_name": "test_name",
@@ -9,6 +19,11 @@ EXAMPLE_USER_GET = {
     "favourite_spots": ["some_test_spot", ]
 }
 
+EXAMPLE_NEW_USER_ADD = {
+    "nickname": "test_user",
+    "email": "somefake@gmail.com"
+}
+
 EXAMPLE_USER_422 = {
     'detail': [
         {
@@ -18,3 +33,5 @@ EXAMPLE_USER_422 = {
         }
     ]
 }
+
+DELETED_USER = "User with user_id=123 is disappear..."

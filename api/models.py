@@ -71,7 +71,7 @@ class CommentDBModel(Base):
     # spots = relationship("Spot", back_populates="comments")
 
 
-async def async_create_tables():
+async def async_create_tables():  # pragma: no cover
     """Main program function."""
     from sqlalchemy.ext.asyncio import create_async_engine
     from api.settings import settings
@@ -84,5 +84,5 @@ async def async_create_tables():
         await conn.run_sync(Base.metadata.create_all)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     asyncio.run(async_create_tables())
