@@ -15,3 +15,9 @@ test:
 	--cov=. \
 	--cov-config=tests/.coveragerc \
 	tests/
+
+cov:
+	pytest --cov-report html \
+	--cov=. \
+	--cov-config=tests/.coveragerc \
+	tests/

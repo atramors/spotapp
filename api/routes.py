@@ -94,7 +94,7 @@ async def create_user(payload: schema.UserCreationSchema,
     path="/{user_id}",
     status_code=status.HTTP_202_ACCEPTED,
     responses={
-        204: {"description": "User have been deleted"},
+        202: {"description": "User have been updated"},
         404: {"model": schema.Error, "description": "Requested user was not found"},
         406: {"model": schema.Error, "description": "Input data format error"},
     },
@@ -126,6 +126,7 @@ async def update_user(user_id: int,
 
 @spotapp_user_router.delete(
     path="/destroy_user/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {"description": "User have been deleted"},
         404: {"model": schema.Error, "description": "Requested user was not found"},
