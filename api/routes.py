@@ -8,14 +8,15 @@ from sqlalchemy.exc import NoResultFound
 from starlette import status
 
 from api.constants import API_TITLE
-from api.crud import CRUDUser
+from api.crud import CRUDSpot, CRUDUser
 from api.db import get_session
 from api import schema
-from api.models import UserDBModel
+from api.models import SpotDBModel, UserDBModel
 from api.utils import PasswordHasher
 
 
 spotapp_user_router = APIRouter(prefix="/users", tags=["SpotApp_User"])
+spotapp_spot_router = APIRouter(prefix="/spots", tags=["SpotApp_Spot"])
 logger = logging.getLogger(__name__)
 
 
@@ -150,6 +151,29 @@ async def destroy_user(user_id: int,
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Specified {user_id=} was not found",
         )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+
+
+@spotapp_spot_router.post(
+    path="/create_spot/",
+    response_model=schema.SpotSchema,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_spot(payload: schema.SpotSchema,
+                      db: AsyncSession = Depends(get_session),
+                      ) -> schema.SpotSchema:
+    """Creating a new spot"""
+
+    try:
+        new_spot = SpotDBModel(
+            **payload.dict(),
+            spot_full_address=f"{payload.spot_street}, {payload.spot_street_number}. "
+                              f"{payload.spot_country}, {payload.spot_city},")
+
+        return await CRUDSpot.add_spot(db=db, spot=new_spot)
+
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)

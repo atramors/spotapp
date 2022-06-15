@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import update as sqlalchemy_update
-from api.models import UserDBModel
+from api.models import SpotDBModel, UserDBModel
 from api import schema
 
 
@@ -74,3 +74,71 @@ class CRUDUser:
         await db.delete(user)
 
         return f"User with {user_id=} is disappear..."
+
+
+class CRUDSpot:
+    model = SpotDBModel
+
+    # @classmethod
+    # async def get_spot_by_id(cls, db: AsyncSession,
+    #                          spot_id: int) -> schema.SpotOpenSchema:
+    #     """Get spot by id"""
+
+    #     query = select(cls.model).where(cls.model.spot_id == spot_id)
+    #     result = await db.execute(query)
+
+    #     return result.scalar_one()
+
+    # @classmethod
+    # async def get_all_spots(cls, db: AsyncSession,
+    #                         ) -> List[schema.SpotOpenSchema]:
+    #     """Get all spots"""
+
+    #     query = select(cls.model)
+    #     result = await db.execute(query)
+
+    #     return [spot[cls.model] for spot in result.all()]
+
+    @classmethod
+    async def add_spot(cls, db: AsyncSession,
+                       spot) -> schema.SpotSchema:
+        """Add new spot to data base"""
+
+        db.add(spot)
+        await db.flush()
+        return spot
+
+    # @classmethod
+    # async def update(cls, db: AsyncSession,
+    #                  spot_id: int,
+    #                  data: Dict,
+    #                  ) -> str:
+    #     """Update a spot from data base"""
+
+    #     query = (
+    #         sqlalchemy_update(cls.model)
+    #         .where(cls.model.spot_id == spot_id)
+    #         .values(**{k: v for k, v in data.items() if v})
+    #         .execution_options(synchronize_session="fetch")
+    #     )
+
+    #     result = await db.execute(query)
+
+    #     rows_updated = result.rowcount
+    #     if rows_updated:
+    #         return f"Spot with {spot_id=} is updated!"
+
+    #     raise NoResultFound
+
+    # @classmethod
+    # async def delete_spot(cls, db: AsyncSession,
+    #                       spot_id: int) -> str:
+    #     """Delete spot from data base"""
+
+    #     query = select(cls.model).filter(cls.model.spot_id == spot_id)
+    #     result = await db.execute(query)
+    #     spot = result.scalar_one()
+
+    #     await db.delete(spot)
+
+    #     return f"Spot with {spot_id=} is disappear..."

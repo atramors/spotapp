@@ -25,7 +25,7 @@ class UserDBModel(Base):
     favourite_spots = Column(ARRAY(String), nullable=True, )
     premium_account_type = Column(Boolean, default=False)
 
-    # spots = relationship("Spots", back_populates="users")
+    spots = relationship("SpotDBModel")
     # comments = relationship("Comment", back_populates="users")
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
@@ -38,19 +38,18 @@ class SpotDBModel(Base):
     spot_name = Column(String(30))
     spot_pic = Column(String(50))
 
-    spot_photos = Column(String)
+    spot_photos = Column(ARRAY(String))
 
     spot_country = Column(String(20))
     spot_city = Column(String(20))
     spot_street = Column(String(30))
     spot_street_number = Column(String(10))
-    spot_full_address = Column(String(80))
+
+    spot_full_address = Column(Text)
 
     spot_description = Column(Text)
     spot_raiting = Column(Float)
-    user_added_spot = Column(String(20))
-    comment = Column(Text)
-
+    comment = Column(ARRAY(String))
     owner_id = Column(Integer, ForeignKey("users.user_id"))
 
     # owner = relationship("Users", back_populates="spots")
