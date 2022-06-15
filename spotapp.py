@@ -3,7 +3,7 @@ from api.constants import API_TITLE
 from api.middleware import http_exception_handler
 
 from api.settings import configure_logger
-from api.routes import spotapp_user_router
+from api.routes import spotapp_user_router, spotapp_spot_router
 
 
 def spotapp_api() -> FastAPI:
@@ -15,6 +15,7 @@ def spotapp_api() -> FastAPI:
     )
     app.add_exception_handler(HTTPException, http_exception_handler)
     app.include_router(spotapp_user_router)
+    app.include_router(spotapp_spot_router)
     return app
 
 
