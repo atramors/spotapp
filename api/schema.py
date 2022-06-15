@@ -65,31 +65,33 @@ class UserSchema(BaseModel):
 
 
 class SpotSchema(BaseModel):
-    spot_name: Union[str, None]
-    spot_pic: Union[str, None]
-    spot_photos: Union[List[str], None]
-    spot_country: Union[str, None]
-    spot_city: Union[str, None]
-    spot_street: Union[str, None]
-    spot_street_number: Union[str, None]
-    spot_full_address: Union[str, None]
-    spot_description: Union[str, None]
-    spot_raiting: Union[float, None]
-    user_added_spot: Union[str, None]
-    comments: Union[List[str], None]
+    spot_name: str
+    spot_pic: Union[str, None] = None
+    spot_photos: List[str]
+    spot_country: str
+    spot_city: str
+    spot_street: str
+    spot_street_number: str
+    spot_description: Union[str, None] = None
+    spot_raiting: Union[int, None] = None
+    comment: Union[List[str], None]
+    owner_id: int
 
     class Config:
+        orm_mode = True
         sample_schema = {
             "example": {
                 "spot_name": "Theatr",
-                "spot_full_address": "Ukraine, Kharkiv, Sumskaiia 25",
+                "spot_pic": "https://patrick.com/",
+                "spot_photos": ["https://patrick.com/some_spot/", "https://patrick.com/another_spot/"],
+                "spot_country": "France",
+                "spot_city": "Andresport",
+                "spot_street": "Campbell Falls",
+                "spot_street_number": "25",
                 "spot_description": "Doe",
-                "spot_pic": "link with an image",
-                "spot_photos": "link with an images",
-                "spot_raiting": ["user1", "user2", ],
-                "user_added_spot": "Some cool user",
-                "comments": ["spot_name1", "spot_name2", ],
-                "favourite_spots": ["spot_name1", ],
+                "spot_raiting": 4.8,
+                "comment": ["spot_name1", "spot_name2", ],
+                "owner_id": 1
             }
         }
 
