@@ -14,6 +14,7 @@ class Error(BaseModel):
 
 class InputDataValidator(BaseModel):
     user_id: Optional[int] = Field(gt=0, le=2147483647)  # check int32 range
+    spot_id: Optional[int] = Field(gt=0, le=2147483647)  # check int32 range
 
 
 class UserCreationSchema(BaseModel):

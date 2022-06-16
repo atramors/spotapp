@@ -79,15 +79,15 @@ class CRUDUser:
 class CRUDSpot:
     model = SpotDBModel
 
-    # @classmethod
-    # async def get_spot_by_id(cls, db: AsyncSession,
-    #                          spot_id: int) -> schema.SpotOpenSchema:
-    #     """Get spot by id"""
+    @classmethod
+    async def get_spot_by_id(cls, db: AsyncSession,
+                             spot_id: int) -> schema.SpotSchema:
+        """Get spot by id"""
 
-    #     query = select(cls.model).where(cls.model.spot_id == spot_id)
-    #     result = await db.execute(query)
+        query = select(cls.model).where(cls.model.spot_id == spot_id)
+        result = await db.execute(query)
 
-    #     return result.scalar_one()
+        return result.scalar_one()
 
     # @classmethod
     # async def get_all_spots(cls, db: AsyncSession,
