@@ -14,7 +14,14 @@ class Error(BaseModel):
 
 class InputDataValidator(BaseModel):
     user_id: Optional[int] = Field(gt=0, le=2147483647)  # check int32 range
-    spot_id: Optional[int] = Field(gt=0, le=2147483647)  # check int32 range
+
+
+class InputSpotDataValidator(BaseModel):
+    spot_id:  Union[int, None] = Field(gt=0, le=2147483647)  # check int32 range
+    spot_country: Union[str, None] = None
+    spot_city: Union[str, None] = None
+    spot_street: Union[str, None] = None
+    owner_id: Union[int, None] = Field(gt=0, le=2147483647)  # check int32 range
 
 
 class UserCreationSchema(BaseModel):
@@ -92,6 +99,26 @@ class SpotSchema(BaseModel):
                 "spot_description": "Doe",
                 "spot_raiting": 4.8,
                 "comment": ["spot_name1", "spot_name2", ],
+                "owner_id": 1
+            }
+        }
+
+
+class SpotFilterSchema(BaseModel):
+    spot_id:  Union[int, None] = Field(gt=0, le=2147483647)  # check int32 range
+    spot_country: Union[str, None] = None
+    spot_city: Union[str, None] = None
+    spot_street: Union[str, None] = None
+    owner_id: Union[int, None] = Field(gt=0, le=2147483647)  # check int32 range
+
+    class Config:
+        orm_mode = True
+        sample_schema = {
+            "example": {
+                "spot_id": 1,
+                "spot_country": "France",
+                "spot_city": "Andresport",
+                "spot_street": "Campbell Falls",
                 "owner_id": 1
             }
         }

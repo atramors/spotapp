@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -81,23 +81,24 @@ class CRUDSpot:
 
     @classmethod
     async def get_spot_by_id(cls, db: AsyncSession,
-                             spot_id: int) -> schema.SpotSchema:
+                             spot_id: int,
+                             ) -> schema.SpotSchema:
         """Get spot by id"""
-
         query = select(cls.model).where(cls.model.spot_id == spot_id)
         result = await db.execute(query)
 
         return result.scalar_one()
 
-    # @classmethod
-    # async def get_all_spots(cls, db: AsyncSession,
-    #                         ) -> List[schema.SpotOpenSchema]:
-    #     """Get all spots"""
+    @classmethod
+    async def get_filtered_spots(cls,  db: AsyncSession,
+                                 filter: schema.SpotFilterSchema
+                                 ) -> List[schema.SpotSchema]:
+        """Get all spots"""
+        filter_params = {k: v for k, v in filter.dict().items() if v}
+        query = select(cls.model).filter_by(**filter_params)
+        result = await db.execute(query)
 
-    #     query = select(cls.model)
-    #     result = await db.execute(query)
-
-    #     return [spot[cls.model] for spot in result.all()]
+        return [spot[cls.model] for spot in result.all()]
 
     @classmethod
     async def add_spot(cls, db: AsyncSession,
