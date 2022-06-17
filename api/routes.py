@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import ValidationError
@@ -174,6 +174,81 @@ async def create_spot(payload: schema.SpotSchema,
 
         return await CRUDSpot.add_spot(db=db, spot=new_spot)
 
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+
+
+@spotapp_spot_router.get(
+    path="/{spot_id}",
+    response_model=schema.SpotSchema,
+    responses={
+        200: {"description": "Spot requested by spot_id"},
+        404: {"model": schema.Error, "description": "Requested spot was not found"},
+        406: {"model": schema.Error, "description": "Input data format error"},
+    },
+)
+async def get_spot_by_id(spot_id: int,
+                         db: AsyncSession = Depends(get_session),
+                         ) -> schema.SpotSchema:
+    """Getting spot by the id"""
+
+    try:
+        schema.InputDataValidator(spot_id=spot_id)
+
+        return await CRUDSpot.get_spot_by_id(db=db,
+                                             spot_id=spot_id)
+
+    except ValidationError as exc:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Specified {spot_id=} was not found",
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+
+
+@spotapp_spot_router.get(
+    path="/filtered/",
+    response_model=List[schema.SpotSchema],
+    responses={
+        200: {"description": "Spot requested by spot_id"},
+        404: {"model": schema.Error, "description": "Requested spot was not found"},
+        406: {"model": schema.Error, "description": "Input data format error"},
+    },
+)
+async def get_spots(spot_country: Union[str, None] = None,
+                    spot_city: Union[str, None] = None,
+                    spot_street: Union[str, None] = None,
+                    owner_id: Union[int, None] = None,
+                    db: AsyncSession = Depends(get_session),
+                    ) -> List[schema.SpotSchema]:
+    """Getting filtered spots"""
+
+    try:
+        filter_params = schema.SpotFilterSchema(
+            spot_country=spot_country,
+            spot_city=spot_city,
+            spot_street=spot_street,
+            owner_id=owner_id)
+
+        result = await CRUDSpot.get_filtered_spots(db=db, filter=filter_params)
+
+        if result:
+            return result
+
+        raise NoResultFound
+
+    except ValidationError as exc:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Specified spot was not found",
+        )
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
