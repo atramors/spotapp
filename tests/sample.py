@@ -1,14 +1,14 @@
 RAW_USER = {
-    "nickname": "test_user",
-    "first_name": "fake_name",
-    "last_name": "fake_name2",
+    "nickname": "rickstar",
+    "first_name": "rick",
+    "last_name": "morty",
     "user_pic": "fake_pic",
-    "email": "somefake@gmail.com",
+    "email": "rickstar@fake.com",
     "password": "strong_password",
     "premium_account_type": False,
 }
 
-EXAMPLE_USER_GET = {
+EXAMPLE_USER = {
     "nickname": "test_user",
     "first_name": "test_name",
     "last_name": "test_name2",
@@ -35,3 +35,29 @@ EXAMPLE_USER_422 = {
 }
 
 DELETED_USER = "User with user_id=123 is disappear..."
+
+EXAMPLE_SPOT = {
+    "spot_name": "Theatr",
+    "spot_pic": "https://patrick.com/",
+    "spot_photos": ["https://patrick.com/some_spot/", "https://patrick.com/another_spot/"],
+    "spot_country": "France",
+    "spot_city": "Andresport",
+    "spot_street": "Campbell Falls",
+    "spot_street_number": "25",
+    "spot_description": "Doe",
+    "spot_raiting": 4,
+    "comment": [],
+    "owner_id": 1
+}
+
+RAW_SPOT = {
+    "spot_name": "Theatr",
+    "spot_pic": "https://patrick.com/",
+    "spot_photos": ["https://patrick.com/some_spot/", "https://patrick.com/another_spot/"],
+    "spot_country": "France",
+    "spot_city": "Andresport",
+    "spot_street": "Campbell Falls",
+    "spot_street_number": "25",
+    "spot_description": "Doe",
+    "owner_id": 1
+}

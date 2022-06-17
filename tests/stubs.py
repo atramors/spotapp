@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Union
 from sqlalchemy.ext.asyncio import AsyncSession
 from tests import sample
 
@@ -10,11 +10,11 @@ async def get_user_by_id_empty_stub(db: AsyncSession,
 
 async def get_user_by_id_stub(db: AsyncSession,
                               user_id: int):
-    return sample.EXAMPLE_USER_GET
+    return sample.EXAMPLE_USER
 
 
 async def get_all_users_stub(db: AsyncSession):
-    return [sample.EXAMPLE_USER_GET, sample.EXAMPLE_USER_GET]
+    return [sample.EXAMPLE_USER, sample.EXAMPLE_USER]
 
 
 async def create_new_user_stub(db: AsyncSession,
@@ -25,3 +25,19 @@ async def create_new_user_stub(db: AsyncSession,
 async def delete_user_stub(db: AsyncSession,
                            user_id: int):
     return sample.DELETED_USER
+
+
+async def get_spot_by_id_stub(db: AsyncSession,
+                              spot_id: int):
+    return sample.EXAMPLE_SPOT
+
+
+async def get_spots_stub(db: AsyncSession,
+                         filter,
+                         ):
+    return [sample.EXAMPLE_SPOT, sample.EXAMPLE_SPOT]
+
+
+async def create_new_spot_stub(db: AsyncSession,
+                               spot):
+    return sample.EXAMPLE_SPOT

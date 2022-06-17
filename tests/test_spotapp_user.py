@@ -1,7 +1,7 @@
 from http import HTTPStatus
 import json
-from api.crud import CRUDUser
 
+from api.crud import CRUDUser
 from tests import stubs, sample
 
 
@@ -15,7 +15,7 @@ def test_user_get_by_id_ok(client, mocker):
                         side_effect=stubs.get_user_by_id_stub, autospec=True)
     response = client.get("/users/1")
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == sample.EXAMPLE_USER_GET
+    assert response.json() == sample.EXAMPLE_USER
 
 
 def test_user_get_by_id_422(client, mocker):
@@ -31,7 +31,7 @@ def test_user_get_all_ok(client, mocker):
                         side_effect=stubs.get_all_users_stub, autospec=True)
     response = client.get("/users/all/")
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == [sample.EXAMPLE_USER_GET, sample.EXAMPLE_USER_GET]
+    assert response.json() == [sample.EXAMPLE_USER, sample.EXAMPLE_USER]
 
 
 def test_create_user_ok(client, mocker):
