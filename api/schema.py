@@ -104,6 +104,32 @@ class SpotSchema(BaseModel):
         }
 
 
+class SpotUpdateSchema(BaseModel):
+    spot_name: Union[str, None] = None
+    spot_photos: Union[List[str], None] = None
+    spot_country: Union[str, None] = None
+    spot_city: Union[str, None] = None
+    spot_street: Union[str, None] = None
+    spot_street_number: Union[str, None] = None
+    spot_description: Union[str, None] = None
+    spot_raiting: Union[int, None] = None
+
+    class Config:
+        orm_mode = True
+        sample_schema = {
+            "example": {
+                "spot_name": "Theatr",
+                "spot_photos": ["https://patrick.com/some_spot/", "https://patrick.com/another_spot/"],
+                "spot_country": "France",
+                "spot_city": "Andresport",
+                "spot_street": "Campbell Falls",
+                "spot_street_number": "25",
+                "spot_description": "Doe",
+                "spot_raiting": 4.8,
+            }
+        }
+
+
 class SpotFilterSchema(BaseModel):
     spot_id:  Union[int, None] = Field(gt=0, le=2147483647)  # check int32 range
     spot_country: Union[str, None] = None
