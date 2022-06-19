@@ -109,27 +109,27 @@ class CRUDSpot:
         await db.flush()
         return spot
 
-    # @classmethod
-    # async def update(cls, db: AsyncSession,
-    #                  spot_id: int,
-    #                  data: Dict,
-    #                  ) -> str:
-    #     """Update a spot from data base"""
+    @classmethod
+    async def update(cls, db: AsyncSession,
+                     spot_id: int,
+                     data: Dict,
+                     ) -> str:
+        """Update a spot from data base"""
 
-    #     query = (
-    #         sqlalchemy_update(cls.model)
-    #         .where(cls.model.spot_id == spot_id)
-    #         .values(**{k: v for k, v in data.items() if v})
-    #         .execution_options(synchronize_session="fetch")
-    #     )
+        query = (
+            sqlalchemy_update(cls.model)
+            .where(cls.model.spot_id == spot_id)
+            .values(**{k: v for k, v in data.items() if v})
+            .execution_options(synchronize_session="fetch")
+        )
 
-    #     result = await db.execute(query)
+        result = await db.execute(query)
 
-    #     rows_updated = result.rowcount
-    #     if rows_updated:
-    #         return f"Spot with {spot_id=} is updated!"
+        rows_updated = result.rowcount
+        if rows_updated:
+            return f"Spot with {spot_id=} is updated!"
 
-    #     raise NoResultFound
+        raise NoResultFound
 
     # @classmethod
     # async def delete_spot(cls, db: AsyncSession,

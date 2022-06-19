@@ -252,3 +252,36 @@ async def get_spots(spot_country: Union[str, None] = None,
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+
+
+@spotapp_spot_router.put(
+    path="/{spot_id}",
+    status_code=status.HTTP_202_ACCEPTED,
+    responses={
+        202: {"description": "Spot have been updated"},
+        404: {"model": schema.Error, "description": "Requested spot was not found"},
+        406: {"model": schema.Error, "description": "Input data format error"},
+    },
+)
+async def update_spot(spot_id: int,
+                      payload: schema.SpotUpdateSchema,
+                      db: AsyncSession = Depends(get_session),
+                      ) -> str:
+    """Updating spot by the spot id"""
+
+    try:
+        # schema.InputSpotDataValidator(spot_id=spot_id)
+        data_to_update = payload.dict()
+
+        return await CRUDSpot.update(db=db, spot_id=spot_id, data=data_to_update)
+
+    except ValidationError as exc:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Specified {spot_id=} was not found",
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
