@@ -1,4 +1,5 @@
 import pytest
+import pytest_asyncio
 from httpx import AsyncClient
 from fastapi.testclient import TestClient
 
@@ -15,7 +16,7 @@ def client():
         yield client_fixture
 
 
-@pytest.fixture
+@pytest_asyncio.fixture()
 async def async_client():
     """Async client fixture"""
 

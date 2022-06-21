@@ -35,6 +35,7 @@ EXAMPLE_USER_422 = {
 }
 
 DELETED_USER = "User with user_id=123 is disappear..."
+DELETED_SPOT = "Spot with spot_id=123 is destroied..."
 
 EXAMPLE_SPOT = {
     "spot_name": "Theatr",

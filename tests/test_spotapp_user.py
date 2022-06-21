@@ -37,7 +37,7 @@ def test_user_get_all_ok(client, mocker):
 def test_create_user_ok(client, mocker):
     mocker.patch.object(CRUDUser, "add_user",
                         side_effect=stubs.create_new_user_stub, autospec=True)
-    response = client.post("/users/create_user/", json.dumps(sample.RAW_USER))
+    response = client.post("/users/create/", json.dumps(sample.RAW_USER))
     assert response.status_code == HTTPStatus.CREATED
     assert response.json() == sample.EXAMPLE_NEW_USER_ADD
 
@@ -45,6 +45,5 @@ def test_create_user_ok(client, mocker):
 def test_delete_user_ok(client, mocker):
     mocker.patch.object(CRUDUser, "delete_user",
                         side_effect=stubs.delete_user_stub, autospec=True)
-    response = client.delete("/users/destroy_user/123")
+    response = client.delete("/users/destroy/123")
     assert response.status_code == HTTPStatus.NO_CONTENT
-    assert response.json() == sample.DELETED_USER
