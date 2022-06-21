@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional, Union
 from pydantic import BaseModel, Field
 
@@ -150,5 +151,29 @@ class SpotFilterSchema(BaseModel):
         }
 
 
-class CommentSchema(BaseModel):
-    body: Union[str, None]
+class CommentNewSchema(BaseModel):
+    body: str
+
+    class Config:
+        orm_mode = True
+        sample_schema = {
+            "example": {
+                "body": "This is awesome spot!"
+            }
+        }
+
+
+class CommentFullSchema(BaseModel):
+    comment_id: int
+    body: str
+    owner_id: int
+
+    class Config:
+        orm_mode = True
+        sample_schema = {
+            "example": {
+                "comment_id": 123,
+                "body": "This is awesome spot!",
+                "owner_id": 1
+            }
+        }

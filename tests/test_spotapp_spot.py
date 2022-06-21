@@ -13,12 +13,12 @@ def test_spot_get_by_id_ok(client, mocker):
     assert response.json() == sample.EXAMPLE_SPOT
 
 
-# def test_spot_get_by_id_422(client, mocker):
-#     mocker.patch.object(CRUDSpot, "get_spot_by_id",
-#                         side_effect=stubs.get_spot_by_id_empty_stub, autospec=True)
-#     response = client.get("/spots/wrong_data_type")
-#     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
-#     assert response.json() == sample.EXAMPLE_SPOT_422
+def test_spot_get_by_id_422(client, mocker):
+    mocker.patch.object(CRUDSpot, "get_spot_by_id",
+                        side_effect=stubs.get_spot_by_id_empty_stub, autospec=True)
+    response = client.get("/spots/wrong_data_type")
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert response.json() == sample.EXAMPLE_SPOT_422
 
 
 def test_get_spots_ok(client, mocker):

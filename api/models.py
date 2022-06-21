@@ -9,7 +9,6 @@ Base = declarative_base()
 
 
 class UserDBModel(Base):
-
     __tablename__ = "users"
 
     user_id = Column(Integer, primary_key=True, index=True)
@@ -31,7 +30,6 @@ class UserDBModel(Base):
 
 
 class SpotDBModel(Base):
-
     __tablename__ = "spots"
 
     spot_id = Column(Integer, primary_key=True, index=True)
@@ -58,7 +56,6 @@ class SpotDBModel(Base):
 
 
 class CommentDBModel(Base):
-
     __tablename__ = "comments"
 
     comment_id = Column(Integer, primary_key=True, index=True)
@@ -71,7 +68,7 @@ class CommentDBModel(Base):
 
 
 async def async_create_tables():  # pragma: no cover
-    """Main program function."""
+    """Create tables from models from the top"""
     from sqlalchemy.ext.asyncio import create_async_engine
     from api.settings import settings
 

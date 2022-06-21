@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import update as sqlalchemy_update
-from api.models import SpotDBModel, UserDBModel
+from api.models import CommentDBModel, SpotDBModel, UserDBModel
 from api import schema
 
 
@@ -143,3 +143,17 @@ class CRUDSpot:
     #     await db.delete(spot)
 
     #     return f"Spot with {spot_id=} is disappear..."
+
+
+class CRUDComment:
+    model = CommentDBModel
+
+    @classmethod
+    async def get_comment_by_id(cls, db: AsyncSession,
+                                comment_id: int,
+                                ) -> schema.CommentFullSchema:
+        """Get comment by id"""
+        query = select(cls.model).where(cls.model.comment_id == comment_id)
+        result = await db.execute(query)
+
+        return result.scalar_one()

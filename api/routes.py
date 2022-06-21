@@ -8,15 +8,16 @@ from sqlalchemy.exc import NoResultFound
 from starlette import status
 
 from api.constants import API_TITLE
-from api.crud import CRUDSpot, CRUDUser
+from api.crud import CRUDSpot, CRUDUser, CRUDComment
 from api.db import get_session
 from api import schema
-from api.models import SpotDBModel, UserDBModel
+from api.models import SpotDBModel, UserDBModel, CommentDBModel
 from api.utils import PasswordHasher
 
 
 spotapp_user_router = APIRouter(prefix="/users", tags=["SpotApp_User"])
 spotapp_spot_router = APIRouter(prefix="/spots", tags=["SpotApp_Spot"])
+spotapp_comment_router = APIRouter(prefix="/comments", tags=["SpotApp_Comment"])
 logger = logging.getLogger(__name__)
 
 
@@ -281,6 +282,37 @@ async def update_spot(spot_id: int,
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Specified {spot_id=} was not found",
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+
+
+@spotapp_comment_router.get(
+    path="/{comment_id}",
+    response_model=schema.CommentFullSchema,
+    responses={
+        200: {"description": "Comment requested by comment_id"},
+        404: {"model": schema.Error, "description": "Requested comment was not found"},
+        406: {"model": schema.Error, "description": "Input data format error"},
+    },
+)
+async def get_comment(comment_id: int,
+                      db: AsyncSession = Depends(get_session),
+                      ) -> schema.CommentFullSchema:
+    """Getting comment by the comment id"""
+
+    try:
+        schema.InputDataValidator(comment_id=comment_id)
+
+        return await CRUDComment.get_comment_by_id(db=db, comment_id=comment_id)
+
+    except ValidationError as exc:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Specified {comment_id=} was not found",
         )
     except Exception as exc:
         raise HTTPException(
