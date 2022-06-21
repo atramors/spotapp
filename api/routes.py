@@ -1,13 +1,12 @@
 import logging
-from typing import Dict, List, Union
+from typing import List, Union
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
 from starlette import status
 
-from api.constants import API_TITLE
 from api.crud import CRUDSpot, CRUDUser, CRUDComment
 from api.db import get_session
 from api import schema
@@ -71,7 +70,7 @@ async def get_all_users(db: AsyncSession = Depends(get_session),
 
 
 @spotapp_user_router.post(
-    path="/create_user/",
+    path="/create/",
     response_model=schema.UserTerseSchema,
     status_code=status.HTTP_201_CREATED,
 )
@@ -103,7 +102,6 @@ async def create_user(payload: schema.UserCreationSchema,
 )
 async def update_user(user_id: int,
                       payload: schema.UserSchema,
-
                       db: AsyncSession = Depends(get_session),
                       ) -> str:
     """Updating user by the user id"""
@@ -127,7 +125,7 @@ async def update_user(user_id: int,
 
 
 @spotapp_user_router.delete(
-    path="/destroy_user/{user_id}",
+    path="/destroy/{user_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {"description": "User have been deleted"},
@@ -137,7 +135,7 @@ async def update_user(user_id: int,
 )
 async def destroy_user(user_id: int,
                        db: AsyncSession = Depends(get_session),
-                       ) -> str:
+                       ) -> Response:
     """Getting user by the user id"""
 
     try:
@@ -158,7 +156,7 @@ async def destroy_user(user_id: int,
 
 
 @spotapp_spot_router.post(
-    path="/create_spot/",
+    path="/create/",
     response_model=schema.SpotSchema,
     status_code=status.HTTP_201_CREATED,
 )
@@ -275,6 +273,37 @@ async def update_spot(spot_id: int,
         data_to_update = payload.dict()
 
         return await CRUDSpot.update(db=db, spot_id=spot_id, data=data_to_update)
+
+    except ValidationError as exc:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Specified {spot_id=} was not found",
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+
+
+@spotapp_spot_router.delete(
+    path="/destroy/{spot_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        204: {"description": "Spot have been deleted"},
+        404: {"model": schema.Error, "description": "Requested spot was not found"},
+        406: {"model": schema.Error, "description": "Input data format error"},
+    },
+)
+async def destroy_spot(spot_id: int,
+                       db: AsyncSession = Depends(get_session),
+                       ) -> Response:
+    """Getting spot by the spot id"""
+
+    try:
+        schema.InputDataValidator(spot_id=spot_id)
+
+        return await CRUDSpot.delete_spot(db=db, spot_id=spot_id)
 
     except ValidationError as exc:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)

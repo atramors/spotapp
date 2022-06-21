@@ -1,6 +1,8 @@
 from http import HTTPStatus
 import json
 
+from fastapi import Response
+
 from api.crud import CRUDSpot
 from tests import stubs, sample
 
@@ -32,14 +34,13 @@ def test_get_spots_ok(client, mocker):
 def test_create_spot_ok(client, mocker):
     mocker.patch.object(CRUDSpot, "add_spot",
                         side_effect=stubs.create_new_spot_stub, autospec=True)
-    response = client.post("/spots/create_spot/", json.dumps(sample.RAW_SPOT))
+    response = client.post("/spots/create/", json.dumps(sample.RAW_SPOT))
     assert response.status_code == HTTPStatus.CREATED
     assert response.json() == sample.EXAMPLE_SPOT
 
 
-# def test_delete_spot_ok(client, mocker):
-#     mocker.patch.object(CRUDSpot, "delete_spot",
-#                         side_effect=stubs.delete_spot_stub, autospec=True)
-#     response = client.delete("/spots/destroy_spot/123")
-#     assert response.status_code == HTTPStatus.NO_CONTENT
-#     assert response.json() == sample.DELETED_SPOT
+def test_delete_spot_ok(client, mocker):
+    mocker.patch.object(CRUDSpot, "delete_spot",
+                        side_effect=stubs.delete_spot_stub, autospec=True)
+    response = client.delete("/spots/destroy/123")
+    assert response.status_code == HTTPStatus.NO_CONTENT

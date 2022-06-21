@@ -1,4 +1,6 @@
-from typing import Dict, List, Union
+from http import HTTPStatus
+from typing import Dict, List, Tuple, Union
+from fastapi import Response
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -64,7 +66,7 @@ class CRUDUser:
 
     @classmethod
     async def delete_user(cls, db: AsyncSession,
-                          user_id: int) -> str:
+                          user_id: int) -> Response:
         """Delete user from data base"""
 
         query = select(cls.model).filter(cls.model.user_id == user_id)
@@ -72,8 +74,9 @@ class CRUDUser:
         user = result.scalar_one()
 
         await db.delete(user)
+        await db.delete(user)
 
-        return f"User with {user_id=} is disappear..."
+        return Response(status_code=HTTPStatus.NO_CONTENT.value)
 
 
 class CRUDSpot:
@@ -131,18 +134,17 @@ class CRUDSpot:
 
         raise NoResultFound
 
-    # @classmethod
-    # async def delete_spot(cls, db: AsyncSession,
-    #                       spot_id: int) -> str:
-    #     """Delete spot from data base"""
+    @classmethod
+    async def delete_spot(cls, db: AsyncSession,
+                          spot_id: int) -> Response:
+        """Delete spot from data base"""
 
-    #     query = select(cls.model).filter(cls.model.spot_id == spot_id)
-    #     result = await db.execute(query)
-    #     spot = result.scalar_one()
+        query = select(cls.model).filter(cls.model.spot_id == spot_id)
+        result = await db.execute(query)
+        spot = result.scalar_one()
+        await db.delete(spot)
 
-    #     await db.delete(spot)
-
-    #     return f"Spot with {spot_id=} is disappear..."
+        return Response(status_code=HTTPStatus.NO_CONTENT.value)
 
 
 class CRUDComment:
