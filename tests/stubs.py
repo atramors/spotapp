@@ -1,4 +1,3 @@
-from typing import Dict, Union
 from sqlalchemy.ext.asyncio import AsyncSession
 from tests import sample
 
@@ -33,11 +32,25 @@ async def get_spot_by_id_stub(db: AsyncSession,
 
 
 async def get_spots_stub(db: AsyncSession,
-                         filter,
-                         ):
+                         filter):
     return [sample.EXAMPLE_SPOT, sample.EXAMPLE_SPOT]
+
+
+async def get_spot_by_id_empty_stub(db: AsyncSession,
+                                    spot_id: int):
+    return []
 
 
 async def create_new_spot_stub(db: AsyncSession,
                                spot):
     return sample.EXAMPLE_SPOT
+
+
+async def get_comment_by_id_stub(db: AsyncSession,
+                                 comment_id: int):
+    return sample.EXAMPLE_COMMENT
+
+
+async def get_comment_by_id_empty_stub(db: AsyncSession,
+                                       comment_id: int):
+    return []

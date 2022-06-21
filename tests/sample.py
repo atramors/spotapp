@@ -49,7 +49,15 @@ EXAMPLE_SPOT = {
     "comment": [],
     "owner_id": 1
 }
-
+EXAMPLE_SPOT_422 = {
+    'detail': [
+        {
+            'loc': ['path', 'spot_id'],
+            'msg': 'value is not a valid integer',
+            'type': 'type_error.integer'
+        }
+    ]
+}
 RAW_SPOT = {
     "spot_name": "Theatr",
     "spot_pic": "https://patrick.com/",
@@ -60,4 +68,19 @@ RAW_SPOT = {
     "spot_street_number": "25",
     "spot_description": "Doe",
     "owner_id": 1
+}
+
+EXAMPLE_COMMENT = {
+    "comment_id": 1,
+    "body": "This is awesome spot!",
+    "owner_id": 1
+}
+EXAMPLE_COMMENT_422 = {
+    'detail': [
+        {
+            'loc': ['path', 'comment_id'],
+            'msg': 'value is not a valid integer',
+            'type': 'type_error.integer'
+        }
+    ]
 }
