@@ -74,7 +74,6 @@ class CRUDUser:
         user = result.scalar_one()
 
         await db.delete(user)
-        await db.delete(user)
 
         return Response(status_code=HTTPStatus.NO_CONTENT.value)
 
@@ -159,3 +158,12 @@ class CRUDComment:
         result = await db.execute(query)
 
         return result.scalar_one()
+
+    @classmethod
+    async def add_comment(cls, db: AsyncSession,
+                          comment) -> schema.CommentFullSchema:
+        """Add new comment to data base"""
+
+        db.add(comment)
+        await db.flush()
+        return comment

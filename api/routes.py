@@ -346,3 +346,23 @@ async def get_comment(comment_id: int,
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)
+
+
+@spotapp_comment_router.post(
+    path="/create/",
+    response_model=schema.CommentFullSchema,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_comment(payload: schema.CommentNewSchema,
+                         db: AsyncSession = Depends(get_session),
+                         ) -> schema.CommentFullSchema:
+    """Creating a new comment"""
+
+    try:
+        new_comment = CommentDBModel(**payload.dict())
+
+        return await CRUDComment.add_comment(db=db, comment=new_comment)
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)

@@ -70,11 +70,13 @@ RAW_SPOT = {
     "spot_description": "Doe",
     "owner_id": 1
 }
-
+RAW_COMMENT = {
+    "body": "This is awesome spot!",
+}
 EXAMPLE_COMMENT = {
     "comment_id": 1,
     "body": "This is awesome spot!",
-    "owner_id": 1
+    "created_at": "2022-06-23T18:36:03.741328",
 }
 EXAMPLE_COMMENT_422 = {
     'detail': [

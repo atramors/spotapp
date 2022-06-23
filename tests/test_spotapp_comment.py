@@ -21,17 +21,17 @@ def test_comment_get_by_id_422(client, mocker):
     assert response.json() == sample.EXAMPLE_COMMENT_422
 
 
-# def test_create_comment_ok(client, mocker):
-#     mocker.patch.object(CRUDComment, "add_comment",
-#                         side_effect=stubs.create_new_comment_stub, autospec=True)
-#     response = client.post("/comments/create_comment/", json.dumps(sample.RAW_SPOT))
-#     assert response.status_code == HTTPStatus.CREATED
-#     assert response.json() == sample.EXAMPLE_SPOT
+def test_create_comment_ok(client, mocker):
+    mocker.patch.object(CRUDComment, "add_comment",
+                        side_effect=stubs.create_new_comment_stub, autospec=True)
+    response = client.post("/comments/create/", json.dumps(sample.RAW_COMMENT))
+    assert response.status_code == HTTPStatus.CREATED
+    assert response.json() == sample.EXAMPLE_COMMENT
 
 
 # def test_delete_comment_ok(client, mocker):
 #     mocker.patch.object(CRUDSpot, "delete_comment",
 #                         side_effect=stubs.delete_comment_stub, autospec=True)
-#     response = client.delete("/comments/destroy_comment/123")
+#     response = client.delete("/comments/destroy/123")
 #     assert response.status_code == HTTPStatus.NO_CONTENT
 #     assert response.json() == sample.DELETED_SPOT
