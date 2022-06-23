@@ -61,3 +61,8 @@ async def get_comment_by_id_stub(db: AsyncSession,
 async def get_comment_by_id_empty_stub(db: AsyncSession,
                                        comment_id: int):
     return []
+
+
+async def create_new_comment_stub(db: AsyncSession,
+                                  comment):
+    return sample.EXAMPLE_COMMENT
