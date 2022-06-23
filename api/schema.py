@@ -166,7 +166,7 @@ class CommentNewSchema(BaseModel):
 class CommentFullSchema(BaseModel):
     comment_id: int
     body: str
-    owner_id: int
+    created_at: datetime
 
     class Config:
         orm_mode = True
@@ -174,6 +174,6 @@ class CommentFullSchema(BaseModel):
             "example": {
                 "comment_id": 123,
                 "body": "This is awesome spot!",
-                "owner_id": 1
+                "created_at": "2022-05-05"
             }
         }
