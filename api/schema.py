@@ -13,6 +13,15 @@ class Error(BaseModel):
                       )
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    email: Union[str, None] = None
+
+
 class InputDataValidator(BaseModel):
     user_id: Optional[int] = Field(gt=0, le=2147483647)  # check int32 range
 
@@ -68,6 +77,24 @@ class UserSchema(BaseModel):
     email: Union[str, None] = None
     password: Union[str, None] = None
     premium_account_type: Union[bool, None] = None
+
+    class Config:
+        orm_mode = True
+
+
+class UserFullSchema(BaseModel):
+    nickname: Union[str, None] = None
+    first_name: Union[str, None] = None
+    last_name: Union[str, None] = None
+    user_pic: Union[str, None] = None
+    email: Union[str, None] = None
+    password: Union[str, None] = None
+    premium_account_type: Union[bool, None] = None
+    friends: Union[List[str], None] = []
+    spot_photos: Union[List[str], None] = []
+    added_spots: Union[List[str], None] = []
+    favourite_spots: Union[List[str], None] = []
+    created_at: datetime
 
     class Config:
         orm_mode = True
