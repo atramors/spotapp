@@ -1,10 +1,16 @@
 from http import HTTPStatus
 import json
 
-from fastapi import Response
-
 from api.crud import CRUDSpot
+from api.authentication import get_current_user
+from spotapp import app
 from tests import stubs, sample
+
+
+async def override_dependency(anything: str = None):
+    return {}
+
+app.dependency_overrides[get_current_user] = override_dependency
 
 
 def test_spot_get_by_id_ok(client, mocker):

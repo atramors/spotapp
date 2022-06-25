@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
 
 from api import schema
-from api.authentication import get_current_active_user, get_current_user
+from api.authentication import get_current_user
 from api.crud import CRUDSpot, CRUDUser, CRUDComment
 from api.db import get_session
 from api.models import SpotDBModel, UserDBModel, CommentDBModel
@@ -162,6 +162,7 @@ async def destroy_user(user_id: int,
 )
 async def create_spot(payload: schema.SpotSchema,
                       db: AsyncSession = Depends(get_session),
+                      current_user: UserDBModel = Depends(get_current_user),
                       ) -> schema.SpotSchema:
     """Creating a new spot"""
 
@@ -267,6 +268,7 @@ async def get_spots(spot_country: Union[str, None] = None,
 async def update_spot(spot_id: int,
                       payload: schema.SpotUpdateSchema,
                       db: AsyncSession = Depends(get_session),
+                      current_user: UserDBModel = Depends(get_current_user),
                       ) -> str:
     """Updating spot by the spot id"""
 
@@ -298,6 +300,7 @@ async def update_spot(spot_id: int,
 )
 async def destroy_spot(spot_id: int,
                        db: AsyncSession = Depends(get_session),
+                       current_user: UserDBModel = Depends(get_current_user),
                        ) -> Response:
     """Getting spot by the spot id"""
 

@@ -1,10 +1,12 @@
 from http import HTTPStatus
 from typing import Dict, List
+
 from fastapi import Response
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import update as sqlalchemy_update
+
 from api.models import CommentDBModel, SpotDBModel, UserDBModel
 from api import schema
 
