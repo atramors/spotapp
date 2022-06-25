@@ -1,22 +1,22 @@
 import logging
 from typing import List, Union
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
-from starlette import status
 
+from api import schema
+from api.authentication import get_current_active_user, get_current_user
 from api.crud import CRUDSpot, CRUDUser, CRUDComment
 from api.db import get_session
-from api import schema
 from api.models import SpotDBModel, UserDBModel, CommentDBModel
 from api.utils import PasswordHasher
 
 
-spotapp_user_router = APIRouter(prefix="/users", tags=["SpotApp_User"])
-spotapp_spot_router = APIRouter(prefix="/spots", tags=["SpotApp_Spot"])
-spotapp_comment_router = APIRouter(prefix="/comments", tags=["SpotApp_Comment"])
+spotapp_user_router = APIRouter(prefix="/users", tags=["Users"])
+spotapp_spot_router = APIRouter(prefix="/spots", tags=["Spots"])
+spotapp_comment_router = APIRouter(prefix="/comments", tags=["Comments"])
 logger = logging.getLogger(__name__)
 
 
@@ -189,6 +189,7 @@ async def create_spot(payload: schema.SpotSchema,
 )
 async def get_spot_by_id(spot_id: int,
                          db: AsyncSession = Depends(get_session),
+                         current_user: UserDBModel = Depends(get_current_user),
                          ) -> schema.SpotSchema:
     """Getting spot by the id"""
 
@@ -224,6 +225,7 @@ async def get_spots(spot_country: Union[str, None] = None,
                     spot_street: Union[str, None] = None,
                     owner_id: Union[int, None] = None,
                     db: AsyncSession = Depends(get_session),
+                    current_user: UserDBModel = Depends(get_current_user),
                     ) -> List[schema.SpotSchema]:
     """Getting filtered spots"""
 
@@ -269,7 +271,6 @@ async def update_spot(spot_id: int,
     """Updating spot by the spot id"""
 
     try:
-        # schema.InputSpotDataValidator(spot_id=spot_id)
         data_to_update = payload.dict()
 
         return await CRUDSpot.update(db=db, spot_id=spot_id, data=data_to_update)
