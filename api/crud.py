@@ -1,16 +1,28 @@
 from http import HTTPStatus
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List
+
 from fastapi import Response
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import update as sqlalchemy_update
+
 from api.models import CommentDBModel, SpotDBModel, UserDBModel
 from api import schema
 
 
 class CRUDUser:
     model = UserDBModel
+
+    @classmethod
+    async def login(cls, db: AsyncSession,
+                    username: str) -> schema.UserFullSchema:
+        """Login user"""
+
+        query = select(cls.model).where(cls.model.email == username)
+        result = await db.execute(query)
+
+        return result.scalar_one()
 
     @classmethod
     async def get_user_by_id(cls, db: AsyncSession,
