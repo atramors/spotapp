@@ -3,6 +3,7 @@ from typing import List, Union
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from pydantic import ValidationError
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
 
@@ -11,7 +12,7 @@ from api.authentication import get_current_user
 from api.crud import CRUDSpot, CRUDUser, CRUDComment
 from api.db import get_session
 from api.models import SpotDBModel, UserDBModel, CommentDBModel
-from api.utils import PasswordHasher
+from api.utils import PasswordHasher, UserExistException
 
 
 spotapp_user_router = APIRouter(prefix="/users", tags=["Users"])
@@ -61,6 +62,7 @@ async def get_user(user_id: int,
 async def get_all_users(db: AsyncSession = Depends(get_session),
                         ) -> List[schema.UserOpenSchema]:
     """Getting all users"""
+
     try:
         return await CRUDUser.get_all_users(db=db)
 
@@ -78,14 +80,21 @@ async def create_user(payload: schema.UserCreationSchema,
                       db: AsyncSession = Depends(get_session),
                       ) -> schema.UserTerseSchema:
     """Creating a new user"""
-
     try:
+        checked_user = await db.execute(
+            select(UserDBModel).where(UserDBModel.nickname == payload.nickname))
+        if checked_user.fetchone():
+            raise UserExistException(
+                f"User with nickname={payload.nickname} already exist!")
         hashed_password = PasswordHasher().hash_password(payload.password)
         payload.password = hashed_password
         new_user = UserDBModel(**payload.dict())
 
         return await CRUDUser.add_user(db=db, user=new_user)
 
+    except UserExistException as exc:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=exc)
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=exc)

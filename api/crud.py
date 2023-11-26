@@ -7,8 +7,9 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import update as sqlalchemy_update
 
-from api.models import CommentDBModel, SpotDBModel, UserDBModel
+
 from api import schema
+from api.models import CommentDBModel, SpotDBModel, UserDBModel
 
 
 class CRUDUser:
@@ -48,7 +49,6 @@ class CRUDUser:
     async def add_user(cls, db: AsyncSession,
                        user) -> schema.UserTerseSchema:
         """Add new user to data base"""
-
         db.add(user)
         await db.flush()
         return schema.UserTerseSchema(nickname=user.nickname,
@@ -104,7 +104,7 @@ class CRUDSpot:
         return result.scalar_one()
 
     @classmethod
-    async def get_filtered_spots(cls,  db: AsyncSession,
+    async def get_filtered_spots(cls, db: AsyncSession,
                                  filter: schema.SpotFilterSchema
                                  ) -> List[schema.SpotSchema]:
         """Get all spots"""

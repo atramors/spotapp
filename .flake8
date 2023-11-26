@@ -1,0 +1,8 @@
+[flake8]
+exclude =
+    tests
+    venv
+    __init__
+    __pycache__
+    .*
+ignore = E501
