@@ -1,6 +1,6 @@
 # start uvicorn server
 run:
-	uvicorn spotapp:app --reload --port 8000
+	uvicorn spotapp:app --reload --port 8000 --host 0.0.0.0
 
 # check syntax
 lintapi:

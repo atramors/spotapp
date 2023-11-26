@@ -27,7 +27,7 @@ class InputDataValidator(BaseModel):
 
 
 class InputSpotDataValidator(BaseModel):
-    spot_id:  Union[int, None] = Field(gt=0, le=2147483647)  # check int32 range
+    spot_id: Union[int, None] = Field(gt=0, le=2147483647)  # check int32 range
     spot_country: Union[str, None] = None
     spot_city: Union[str, None] = None
     spot_street: Union[str, None] = None
@@ -119,7 +119,8 @@ class SpotSchema(BaseModel):
             "example": {
                 "spot_name": "Theatr",
                 "spot_pic": "https://patrick.com/",
-                "spot_photos": ["https://patrick.com/some_spot/", "https://patrick.com/another_spot/"],
+                "spot_photos": ["https://patrick.com/some_spot/",
+                                "https://patrick.com/another_spot/"],
                 "spot_country": "France",
                 "spot_city": "Andresport",
                 "spot_street": "Campbell Falls",
@@ -147,7 +148,8 @@ class SpotUpdateSchema(BaseModel):
         sample_schema = {
             "example": {
                 "spot_name": "Theatr",
-                "spot_photos": ["https://patrick.com/some_spot/", "https://patrick.com/another_spot/"],
+                "spot_photos": ["https://patrick.com/some_spot/",
+                                "https://patrick.com/another_spot/"],
                 "spot_country": "France",
                 "spot_city": "Andresport",
                 "spot_street": "Campbell Falls",
@@ -159,7 +161,7 @@ class SpotUpdateSchema(BaseModel):
 
 
 class SpotFilterSchema(BaseModel):
-    spot_id:  Union[int, None] = Field(gt=0, le=2147483647)  # check int32 range
+    spot_id: Union[int, None] = Field(gt=0, le=2147483647)  # check int32 range
     spot_country: Union[str, None] = None
     spot_city: Union[str, None] = None
     spot_street: Union[str, None] = None

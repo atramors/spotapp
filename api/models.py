@@ -1,7 +1,8 @@
 import asyncio
 from datetime import datetime
 
-from sqlalchemy import ARRAY, Boolean, Column, DateTime, ForeignKey, Integer, String, Float, Text
+from sqlalchemy import (
+    ARRAY, Boolean, Column, DateTime, ForeignKey, Integer, String, Float, Text)
 from sqlalchemy.orm import relationship, declarative_base
 
 
